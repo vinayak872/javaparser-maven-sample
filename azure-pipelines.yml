@@ -2,7 +2,9 @@ pool:
   name: Default
 
 steps:
-- script: java -version
+- script: |
+    java -version
+    echo $JAVA_HOME
   displayName: "Check Java"
 
 - script: mvn -version
