@@ -1,14 +1,21 @@
+trigger:
+- master
+
 pool:
   name: Default
+  demands:
+  - Agent.Name -equals cdlabvm
 
 steps:
 - script: |
     java -version
     echo $JAVA_HOME
-  displayName: "Check Java"
+  displayName: "Verify Java Version"
 
-- script: mvn -version
-  displayName: "Check Maven"
-
-- script: mvn clean package
-  displayName: "Build Maven Project"
+- task: Maven@3
+  inputs:
+    mavenPomFile: "pom.xml"
+    mavenOptions: "-Xmx3072m"
+    publishJUnitResults: true
+    testResultsFiles: "**/surefire-reports/TEST-*.xml"
+    goals: "package -DskipTests=true"
